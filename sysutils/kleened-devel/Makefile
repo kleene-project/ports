@@ -1,22 +1,21 @@
 PORTNAME=		kleened
-PORTVERSION=	0.0.1
+PORTVERSION=	0.1.0rc1
 DISTVERSIONPREFIX=	v
 CATEGORIES=		sysutils
 
 MAINTAINER=		lasse@philomath.dk
-COMMENT=		Docker-inspired tool for container management in FreeBSD
+COMMENT=		Backend component of Kleene, a container management tool for FreeBSD.
 
 LICENSE=		BSD2CLAUSE
 
 BUILD_DEPENDS=	gmake:devel/gmake \
-		mix:lang/elixir rebar3:devel/rebar3 \
-	        ${LOCALBASE}/lib/elixir/lib/hex/ebin:devel/elixir-hex
-
-#RUN_DEPENDS=	erlc:lang/erlang
+				mix:lang/elixir \
+				rebar3:devel/rebar3 \
+				${LOCALBASE}/lib/elixir/lib/hex/ebin:devel/elixir-hex
 
 USES=			ssl
 USE_GITHUB=		yes
-GH_TUPLE=		lgandersen:jocker:f45d0f4:DEFAULT
+GH_TUPLE=		kleene-project:kleened:97b1934:DEFAULT
 USE_RC_SUBR=	kleened
 
 SUB_FILES=			pkg-message
