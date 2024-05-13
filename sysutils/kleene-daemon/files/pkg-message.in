@@ -1,6 +1,9 @@
 [
 { type: install
   message: <<EOM
+Kleene is a new tool and should be used for
+testing and experimentation purposes only.
+
 To use Kleened, enable it in rc.conf using
 
   sysrc kleened_enable=YES
@@ -25,7 +28,6 @@ NB. The %%ETCDIR%%/config.yaml file should be edited before running
 You can then start Kleened by running:
 
   service kleened start
-
 EOM
 }
 ]

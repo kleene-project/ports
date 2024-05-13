@@ -1,24 +1,27 @@
-PORTNAME=		kleened
-PORTVERSION=	0.1.0rc1
+PORTNAME=		kleene-daemon
+#PORTVERSION=	0.1.0r1
 DISTVERSIONPREFIX=	v
+DISTVERSION=	0.1.0rc1
 CATEGORIES=		sysutils
 
 MAINTAINER=		lasse@philomath.dk
-COMMENT=		Backend component of Kleene, a container management tool for FreeBSD.
+COMMENT=		Kleened, the Kleene backend daemon for managing containers on FreeBSD
+WWW=			https://kleene.dev
 
 LICENSE=		BSD2CLAUSE
 
-BUILD_DEPENDS=	gmake:devel/gmake \
-				mix:lang/elixir \
+BUILD_DEPENDS=	mix:lang/elixir \
 				rebar3:devel/rebar3 \
 				${LOCALBASE}/lib/elixir/lib/hex/ebin:devel/elixir-hex
 
-USES=			ssl
+USES=			ssl gmake
 USE_GITHUB=		yes
 GH_TUPLE=		kleene-project:kleened:97b1934:DEFAULT
 USE_RC_SUBR=	kleened
 
 SUB_FILES=			pkg-message
+
+ETCDIR=     		${PREFIX}/etc/kleened
 
 MIX_TARGET=			release
 ELIXIR_LOCALE=		en_US.UTF-8
@@ -44,27 +47,27 @@ do-build:
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/kleened
-	@${INSTALL_DATA} ${WRKSRC}/example/kleened_config.yaml \
+	${INSTALL_DATA} ${WRKSRC}/example/kleened_config.yaml \
 		${STAGEDIR}${PREFIX}/etc/kleened/config.yaml.sample
-	@${INSTALL_DATA} ${WRKSRC}/example/pf.conf.kleene \
+	${INSTALL_DATA} ${WRKSRC}/example/pf.conf.kleene \
 		${STAGEDIR}${PREFIX}/etc/kleened/pf.conf.kleene.sample
-	@${INSTALL_PROGRAM} ${WRKSRC}/priv/bin/kleened_pty \
+	${INSTALL_PROGRAM} ${WRKSRC}/priv/bin/kleened_pty \
 		${STAGEDIR}${PREFIX}/bin/kleened_pty
 	@${MKDIR} ${STAGEDIR}${PREFIX}/lib/kleened/bin
-	@${INSTALL_SCRIPT} ${WRKSRC}/_build/prod/rel/kleened/bin/kleened \
+	${INSTALL_SCRIPT} ${WRKSRC}/_build/prod/rel/kleened/bin/kleened \
 		${STAGEDIR}${PREFIX}/lib/kleened/bin/
-	@cd ${RELEASE_PATH}/lib && \
+	cd ${RELEASE_PATH}/lib && \
 		${COPYTREE_SHARE} . ${STAGEDIR}${PREFIX}/lib/kleened/lib
-	@cd ${RELEASE_PATH} && ERTS_DIR=$$(${FIND} erts-* -depth 1 -type d) && \
+	cd ${RELEASE_PATH} && ERTS_DIR=$$(${FIND} erts-* -depth 1 -type d) && \
 		${COPYTREE_SHARE} ./$$ERTS_DIR ${STAGEDIR}${PREFIX}/lib/kleened/ && \
 		${CHMOD} +x ${STAGEDIR}${PREFIX}/lib/kleened/$$ERTS_DIR/*
-	@cd ${RELEASE_PATH}/releases && \
+	cd ${RELEASE_PATH}/releases && \
 		${COPYTREE_SHARE} . ${STAGEDIR}${PREFIX}/lib/kleened/releases
-	@cd ${RELEASE_PATH}/releases && \
+	cd ${RELEASE_PATH}/releases && \
 		${INSTALL_DATA} ${WRKSRC}/_build/prod/rel/kleened/releases/start_erl.data ${STAGEDIR}${PREFIX}/lib/kleened/releases/
-	@${INSTALL_SCRIPT} ${RELEASE_PATH}/releases/0.0.1/elixir \
+	${INSTALL_SCRIPT} ${RELEASE_PATH}/releases/0.0.1/elixir \
 		${STAGEDIR}${PREFIX}/lib/kleened/releases/0.0.1/
-	@${INSTALL_SCRIPT} ${RELEASE_PATH}/releases/0.0.1/iex \
+	${INSTALL_SCRIPT} ${RELEASE_PATH}/releases/0.0.1/iex \
 		${STAGEDIR}${PREFIX}/lib/kleened/releases/0.0.1/
 	@CRYPTO_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/crypto-* -depth 0) \
 		&& ${STRIP_CMD} $$CRYPTO_DIR/priv/lib/*.so
