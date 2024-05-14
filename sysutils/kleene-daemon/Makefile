@@ -1,5 +1,4 @@
 PORTNAME=		kleene-daemon
-#PORTVERSION=	0.1.0r1
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.1.0rc1
 CATEGORIES=		sysutils
@@ -21,7 +20,7 @@ USE_RC_SUBR=	kleened
 
 SUB_FILES=			pkg-message
 
-ETCDIR=     		${PREFIX}/etc/kleened
+ETCDIR=				${PREFIX}/etc/kleened
 
 MIX_TARGET=			release
 ELIXIR_LOCALE=		en_US.UTF-8
