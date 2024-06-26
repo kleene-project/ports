@@ -2,7 +2,6 @@ PORTNAME=			kleene-cli
 DISTVERSIONPREFIX=	v
 DISTVERSION=		0.1.0rc3
 CATEGORIES=	sysutils
-MASTER_SITES=	PYPI
 
 MAINTAINER=	lasse@philomath.dk
 COMMENT=	Klee, the Kleene CLI client for managing containers on FreeBSD
@@ -22,9 +21,9 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}httpx>=0.27.0_1:www/py-httpx@${PY_FLAVOR} \
 
 USES=		python:3.8+
 USE_PYTHON=	autoplist pep517
+USE_GITHUB=	yes
+GH_TUPLE=	kleene-project:klee:f125dae:DEFAULT
 
 SUB_FILES=	pkg-message
-
-WRKSRC=		${WRKDIR}/kleene_cli-0.1.0rc3
 
 .include <bsd.port.mk>
