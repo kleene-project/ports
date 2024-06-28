@@ -29,10 +29,9 @@ MIX_ENV=			MIX_REBAR3=${LOCALBASE}/bin/rebar3 \
 					LANG=${ELIXIR_LOCALE} \
 					LC_ALL=${ELIXIR_LOCALE} \
 					MIX_PATH=${LOCALBASE}/lib/elixir/lib/hex/ebin \
-					MIX_HOME=${LOCALBASE}/bin/mix
+					MIX_HOME=mix
 MIX_ENV_NAME=		prod
-MIX_CMD=			${LOCALBASE}/bin/mix
-MIX_COMPILE=		${SETENV} ${MIX_ENV} MIX_ENV=${MIX_ENV_NAME} ${MIX_CMD} ${MIX_TARGET}
+MIX_COMPILE=		${SETENV} ${MIX_ENV} MIX_ENV=${MIX_ENV_NAME} mix ${MIX_TARGET}
 
 RELEASE_PATH=		${WRKSRC}/_build/prod/rel/kleened
 RELEASE_BINARIES=	escript dialyzer erlexec beam.smp heart dyn_erl to_erl \
@@ -45,14 +44,14 @@ do-build:
 	@cd ${WRKSRC} && ${MIX_COMPILE}
 
 do-install:
-	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/kleened
+	${MKDIR} ${STAGEDIR}${PREFIX}/etc/kleened
 	${INSTALL_DATA} ${WRKSRC}/example/kleened_config.yaml \
 		${STAGEDIR}${PREFIX}/etc/kleened/config.yaml.sample
 	${INSTALL_DATA} ${WRKSRC}/example/pf.conf.kleene \
 		${STAGEDIR}${PREFIX}/etc/kleened/pf.conf.kleene.sample
 	${INSTALL_PROGRAM} ${WRKSRC}/priv/bin/kleened_pty \
 		${STAGEDIR}${PREFIX}/bin/kleened_pty
-	@${MKDIR} ${STAGEDIR}${PREFIX}/lib/kleened/bin
+	${MKDIR} ${STAGEDIR}${PREFIX}/lib/kleened/bin
 	${INSTALL_SCRIPT} ${WRKSRC}/_build/prod/rel/kleened/bin/kleened \
 		${STAGEDIR}${PREFIX}/lib/kleened/bin/
 	cd ${RELEASE_PATH}/lib && \
@@ -68,13 +67,13 @@ do-install:
 		${STAGEDIR}${PREFIX}/lib/kleened/releases/0.0.1/
 	${INSTALL_SCRIPT} ${RELEASE_PATH}/releases/0.0.1/iex \
 		${STAGEDIR}${PREFIX}/lib/kleened/releases/0.0.1/
-	@CRYPTO_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/crypto-* -depth 0) \
+	CRYPTO_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/crypto-* -depth 0) \
 		&& ${STRIP_CMD} $$CRYPTO_DIR/priv/lib/*.so
-	@ASN1_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/asn1-* -depth 0) \
+	ASN1_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/asn1-* -depth 0) \
 		&& ${STRIP_CMD} $$ASN1_DIR/priv/lib/asn1rt_nif.so
-	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/lib/exqlite-0.20.0/priv/sqlite3_nif.so
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/lib/exqlite-0.20.0/priv/sqlite3_nif.so
 .for bin in ${RELEASE_BINARIES}
-	@cd ${STAGEDIR}${PREFIX}/lib/kleened/ && ERTS_DIR=$$(${FIND} erts-* -depth 1 -type d) && \
+	cd ${STAGEDIR}${PREFIX}/lib/kleened/ && ERTS_DIR=$$(${FIND} erts-* -depth 1 -type d) && \
 		${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/$$ERTS_DIR/${bin}
 .endfor
 
