@@ -67,14 +67,11 @@ do-install:
 		${STAGEDIR}${PREFIX}/lib/kleened/releases/0.0.1/
 	${INSTALL_SCRIPT} ${RELEASE_PATH}/releases/0.0.1/iex \
 		${STAGEDIR}${PREFIX}/lib/kleened/releases/0.0.1/
-	CRYPTO_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/crypto-* -depth 0) \
-		&& ${STRIP_CMD} $$CRYPTO_DIR/priv/lib/*.so
-	ASN1_DIR=$$(${FIND} ${STAGEDIR}${PREFIX}/lib/kleened/lib/asn1-* -depth 0) \
-		&& ${STRIP_CMD} $$ASN1_DIR/priv/lib/asn1rt_nif.so
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/lib/asn1-*/priv/lib/asn1rt_nif.so
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/lib/crypto-*/priv/lib/*.so
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/lib/exqlite-0.20.0/priv/sqlite3_nif.so
 .for bin in ${RELEASE_BINARIES}
-	cd ${STAGEDIR}${PREFIX}/lib/kleened/ && ERTS_DIR=$$(${FIND} erts-* -depth 1 -type d) && \
-		${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/$$ERTS_DIR/${bin}
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/kleened/erts-*/bin/${bin}
 .endfor
 
 post-install:
