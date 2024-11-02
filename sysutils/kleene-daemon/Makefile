@@ -1,43 +1,43 @@
 PORTNAME=		kleene-daemon
-DISTVERSIONPREFIX=	v
-DISTVERSION=	0.1.0rc2
+DISTVERSIONPREFIX=		v
+DISTVERSION=		0.1.0rc2
 CATEGORIES=		sysutils
 
 MAINTAINER=		lasse@philomath.dk
-COMMENT=		Kleened, the Kleene backend daemon for managing containers on FreeBSD
+COMMENT=		Kleene backend daemon for managing containers on FreeBSD
 WWW=			https://kleene.dev
 
 LICENSE=		BSD2CLAUSE
 
-BUILD_DEPENDS=	mix:lang/elixir \
-				rebar3:devel/rebar3 \
-				${LOCALBASE}/lib/elixir/lib/hex/ebin:devel/elixir-hex
+BUILD_DEPENDS=		${LOCALBASE}/lib/elixir/lib/hex/ebin:devel/elixir-hex \
+			mix:lang/elixir \
+			rebar3:devel/rebar3
 
-USES=			ssl gmake
+USES=			gmake ssl
 USE_GITHUB=		yes
 
 GH_TUPLE=		kleene-project:kleened:6a67380:DEFAULT
-USE_RC_SUBR=	kleened
+USE_RC_SUBR=		kleened
 
-SUB_FILES=			pkg-message
+SUB_FILES=		pkg-message
 
-ETCDIR=				${PREFIX}/etc/kleened
+ETCDIR=			${PREFIX}/etc/kleened
 
-MIX_TARGET=			release
+MIX_TARGET=		release
 ELIXIR_LOCALE=		en_US.UTF-8
 ELIXIR_APP_NAME=	${PORTNAME}
-MIX_ENV=			MIX_REBAR3=${LOCALBASE}/bin/rebar3 \
-					LANG=${ELIXIR_LOCALE} \
-					LC_ALL=${ELIXIR_LOCALE} \
-					MIX_PATH=${LOCALBASE}/lib/elixir/lib/hex/ebin \
-					MIX_HOME=mix
+MIX_ENV=		MIX_REBAR3=${LOCALBASE}/bin/rebar3 \
+			LANG=${ELIXIR_LOCALE} LC_ALL=${ELIXIR_LOCALE} \
+			MIX_PATH=${LOCALBASE}/lib/elixir/lib/hex/ebin \
+			MIX_HOME=mix
 MIX_ENV_NAME=		prod
-MIX_COMPILE=		${SETENV} ${MIX_ENV} MIX_ENV=${MIX_ENV_NAME} mix ${MIX_TARGET}
+MIX_COMPILE=		${SETENV} ${MIX_ENV} MIX_ENV=${MIX_ENV_NAME} mix \
+			${MIX_TARGET}
 
 RELEASE_PATH=		${WRKSRC}/_build/prod/rel/kleened
 RELEASE_BINARIES=	escript dialyzer erlexec beam.smp heart dyn_erl to_erl \
-					erlc epmd run_erl typer inet_gethost erl_child_setup ct_run \
-					erl_call yielding_c_fun
+			erlc epmd run_erl typer inet_gethost erl_child_setup \
+			ct_run erl_call yielding_c_fun
 
 .include <bsd.port.pre.mk>
 
